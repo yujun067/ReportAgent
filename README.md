@@ -1,30 +1,30 @@
-# GitHub Sentinel
+# Report Agent
 
 <p align="center">
-    <br> <a href="README-EN.md">English</a> | 中文
+    <br> English | <a href="README.md">中文</a>
 </p>
 
-GitHub Sentinel 是一个开源的工具 AI 代理，专为开发人员和项目经理设计。它会定期（每日/每周）自动从订阅的 GitHub 仓库中检索和汇总更新。主要功能包括订阅管理、更新检索、通知系统和报告生成。
+Report Agent is an open-source tool AI Agent designed for developers and project managers. It automatically retrieves and aggregates updates from subscribed GitHub repositories on a regular basis (daily/weekly). Key features include subscription management, update retrieval, notification system, and report generation.
 
-## 功能
-- 订阅管理
-- 更新检索
-- 通知系统
-- 报告生成
+## Features
+- Subscription management
+- Update retrieval
+- Notification system
+- Report generation
 
-## 快速开始
+## Getting Started
 
-### 1. 安装依赖
+### 1. Install Dependencies
 
-首先，安装所需的依赖项：
+First, install the required dependencies:
 
 ```sh
 pip install -r requirements.txt
 ```
 
-### 2. 配置应用
+### 2. Configure the Application
 
-编辑 `config.json` 文件，以设置您的 GitHub 令牌、通知设置、订阅文件和更新间隔：
+Edit the `config.json` file to set up your GitHub token, notification settings, subscription file, and update interval:
 
 ```json
 {
@@ -38,46 +38,46 @@ pip install -r requirements.txt
 }
 ```
 
-### 3. 如何运行
+### 3. How to Run
 
-GitHub Sentinel 支持以下三种运行方式：
+GitHub Sentinel supports three different ways to run the application:
 
-#### A. 作为命令行工具运行
+#### A. Run as a Command-Line Tool
 
-您可以从命令行交互式地运行该应用：
+You can run the application interactively from the command line:
 
 ```sh
 python src/command_tool.py
 ```
 
-在此模式下，您可以手动输入命令来管理订阅、检索更新和生成报告。
+In this mode, you can manually input commands to manage subscriptions, retrieve updates, and generate reports.
 
-#### B. 作为后台进程运行（带调度器）
+#### B. Run as a Daemon Process with Scheduler
 
-要将该应用作为后台服务（守护进程）运行，它将定期检查更新：
+To run the application as a background service (daemon) that regularly checks for updates:
 
-1. 确保您已安装 `python-daemon` 包：
+1. Ensure you have the `python-daemon` package installed:
 
     ```sh
     pip install python-daemon
     ```
 
-2. 启动后台进程：
+2. Launch the daemon process:
 
     ```sh
     nohup python3 src/daemon_process.py > logs/daemon_process.log 2>&1 &
     ```
 
-   - 这将启动后台调度器，按照 `config.json` 中指定的间隔定期检查更新。
-   - 日志将保存到 `logs/daemon_process.log` 文件中。
+   - This will start the scheduler in the background, checking for updates at the interval specified in your `config.json`.
+   - Logs will be saved to the `logs/daemon_process.log` file.
 
-#### C. 作为 Gradio 服务器运行
+#### C. Run as a Gradio Server
 
-要使用 Gradio 界面运行应用，允许用户通过 Web 界面与该工具交互：
+To run the application with a Gradio interface, allowing users to interact with the tool via a web interface:
 
 ```sh
 python src/gradio_server.py
 ```
 
-- 这将在您的机器上启动一个 Web 服务器，允许您通过用户友好的界面管理订阅和生成报告。
-- 默认情况下，Gradio 服务器将可在 `http://localhost:7860` 访问，但如果需要，您可以公开共享它。
+- This will start a web server on your machine, allowing you to manage subscriptions and generate reports through a user-friendly interface.
+- By default, the Gradio server will be accessible at `http://localhost:7860`, but you can share it publicly if needed.
