@@ -1,22 +1,19 @@
 # Report Agent
 
-<p align="center">
-    <br> English | <a href="README.md">中文</a>
-</p>
+Report Agent is an open-source AI Agent tool designed for developers and project managers. It supports automatic subscription, aggregation, and analysis of GitHub project progress, and can automatically push daily/weekly reports via multiple channels (such as email). It supports command-line, daemon, and web interface modes.
 
-Report Agent is an open-source tool AI Agent designed for developers and project managers. It automatically retrieves and aggregates updates from subscribed GitHub repositories on a regular basis (daily/weekly). Key features include subscription management, update retrieval, notification system, and report generation.
+## Main Features
+- Multi-project subscription and management (`subscriptions.json`)
+- Automatic retrieval of GitHub project Commits, Issues, and PRs
+- Export progress as Markdown files by day or custom date range
+- Integrated LLM for automatic structured project progress report generation
+- Multiple notification methods (e.g., email)
+- Command-line, scheduled daemon, and Gradio web interface support
+- Unified management of logs and progress files (`logs/`, `daily_progress/`)
 
-## Features
-- Subscription management
-- Update retrieval
-- Notification system
-- Report generation
-
-## Getting Started
+## Quick Start
 
 ### 1. Install Dependencies
-
-First, install the required dependencies:
 
 ```sh
 pip install -r requirements.txt
@@ -24,60 +21,96 @@ pip install -r requirements.txt
 
 ### 2. Configure the Application
 
-Edit the `config.json` file to set up your GitHub token, notification settings, subscription file, and update interval:
+Edit `config.json` to set up your GitHub token, subscription file, notification settings, and scheduling parameters:
 
 ```json
 {
     "github_token": "your_github_token",
-    "notification_settings": {
-        "email": "your_email@example.com",
-        "slack_webhook_url": "your_slack_webhook_url"
+    "email": {
+        "user": "your_email@example.com",
+        "password": "your_email_password",
+        "smtp_server": "smtp.example.com",
+        "smtp_port": 465
     },
     "subscriptions_file": "subscriptions.json",
-    "update_interval": 86400
+    "github_progress_frequency_days": 1,
+    "github_progress_execution_time": "08:00"
 }
 ```
+- `github_token`: GitHub personal access token (read-only repo scope required)
+- `email`: Email configuration for notifications (optional)
+- `subscriptions_file`: Subscription project list file
+- `github_progress_frequency_days`: Progress summary interval (days)
+- `github_progress_execution_time`: Daily scheduled task execution time (24-hour format)
 
-### 3. How to Run
+### 3. Configure Subscribed Projects
 
-GitHub Sentinel supports three different ways to run the application:
+Edit `subscriptions.json` as follows:
 
-#### A. Run as a Command-Line Tool
+```json
+[
+    "langchain-ai/langchain",
+    "DjangoPeng/openai-quickstart",
+    "ollama/ollama"
+]
+```
 
-You can run the application interactively from the command line:
+## Running Methods
+
+### A. Command-Line Interaction
 
 ```sh
 python src/command_tool.py
 ```
+Manually manage subscriptions, fetch progress, and generate reports.
 
-In this mode, you can manually input commands to manage subscriptions, retrieve updates, and generate reports.
+### B. Daemon Process (Scheduled Automation)
 
-#### B. Run as a Daemon Process with Scheduler
-
-To run the application as a background service (daemon) that regularly checks for updates:
-
-1. Ensure you have the `python-daemon` package installed:
-
+1. Install dependency:
     ```sh
     pip install python-daemon
     ```
-
-2. Launch the daemon process:
-
+2. Start the daemon process:
     ```sh
     nohup python3 src/daemon_process.py > logs/daemon_process.log 2>&1 &
     ```
+   - Automatically fetches progress, generates reports, and sends notifications as scheduled in `config.json`.
+   - Logs are saved in `logs/daemon_process.log`.
 
-   - This will start the scheduler in the background, checking for updates at the interval specified in your `config.json`.
-   - Logs will be saved to the `logs/daemon_process.log` file.
-
-#### C. Run as a Gradio Server
-
-To run the application with a Gradio interface, allowing users to interact with the tool via a web interface:
+### C. Gradio Web Interface
 
 ```sh
 python src/gradio_server.py
 ```
+- After starting, visit [http://localhost:7860](http://localhost:7860) to manage subscriptions, generate reports, and download progress files via the web interface.
 
-- This will start a web server on your machine, allowing you to manage subscriptions and generate reports through a user-friendly interface.
-- By default, the Gradio server will be accessible at `http://localhost:7860`, but you can share it publicly if needed.
+## Progress Files & Reports
+
+- All progress files are stored in the `daily_progress/` directory, e.g.:
+
+```
+daily_progress/
+├── langchain-ai_langchain/
+│   ├── 2024-08-18.md
+│   └── 2024-08-18_report.md
+├── ollama_ollama/
+│   ├── 2024-08-04_to_2024-08-18.md
+│   └── 2024-08-04_to_2024-08-18_report.md
+```
+- `*.md` are raw progress files, `*_report.md` are structured reports generated by LLM.
+
+## Typical Workflow
+
+1. After configuring subscriptions and token, run the daemon or web interface.
+2. The system automatically fetches Commits, Issues, and PR progress for all subscribed projects on schedule.
+3. Markdown progress files are generated, and structured reports are created using LLM.
+4. Reports can be automatically pushed via email or downloaded from the web interface.
+
+## Other Notes
+- Log files are saved in the `logs/` directory.
+- Custom notification methods and report templates are supported.
+- See the `src/` directory for detailed code.
+
+---
+
+For more usage examples or language switching, please refer to code comments and Jupyter Notebook demos.
