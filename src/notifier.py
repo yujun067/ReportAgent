@@ -32,10 +32,7 @@ class Notifier:
                 server.sendmail(msg['From'], msg['To'], msg.as_string())
                 LOG.info("邮件发送成功！")
         except Exception as e:
-            if str(e).startswith("(-1, b'\\x00\\x00\\x00')"):
-                LOG.warning("忽略SMTP连接关闭阶段的异常")
-            else:
-                LOG.error(f"发送邮件失败：{str(e)}")
+            LOG.error(f"发送邮件失败：{str(e)}")
 
 if __name__ == '__main__':
     from config import Config
